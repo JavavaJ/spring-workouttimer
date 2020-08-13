@@ -9,19 +9,28 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
+import javax.annotation.PostConstruct;
+
 @SpringBootApplication
 @EnableScheduling
 public class SpringWorkouttimerApplication {
 
+    @Autowired
+    private TelegramTimer telegramTimer;
+
     public static void main(String[] args) {
         ApiContextInitializer.init();
+        SpringApplication.run(SpringWorkouttimerApplication.class, args);
+    }
+
+    @PostConstruct
+    public void init() {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
-            telegramBotsApi.registerBot(new TelegramTimer());
+            telegramBotsApi.registerBot(telegramTimer);
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }
-        SpringApplication.run(SpringWorkouttimerApplication.class, args);
     }
 
 }
